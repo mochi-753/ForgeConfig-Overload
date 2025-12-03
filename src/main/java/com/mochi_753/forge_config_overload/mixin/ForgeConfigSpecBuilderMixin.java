@@ -9,29 +9,37 @@ package com.mochi_753.forge_config_overload.mixin;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.List;
-import java.util.function.Supplier;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(value = ForgeConfigSpec.Builder.class, remap = false)
-public class ForgeConfigSpecBuilderMixin {
-    @Inject(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;DD)Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;", at = @At("HEAD"))
-    private void onDefineInRange(List<String> path, Supplier<Double> defaultSupplier, double min, double max, CallbackInfoReturnable<ForgeConfigSpec.DoubleValue> cir) {
-        min = -Double.MAX_VALUE;
-        max = Double.MAX_VALUE;
+public abstract class ForgeConfigSpecBuilderMixin {
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;DD)Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;", at = @At("HEAD"), argsOnly = true, name = "arg3")
+    private double modifyDoubleMin(double min) {
+        return -Double.MAX_VALUE;
     }
 
-    @Inject(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;II)Lnet/minecraftforge/common/ForgeConfigSpec$IntValue;", at = @At("HEAD"))
-    private void onDefineInRange(List<String> path, Supplier<Integer> defaultSupplier, int min, int max, CallbackInfoReturnable<ForgeConfigSpec.IntValue> cir) {
-        min = Integer.MIN_VALUE;
-        max = Integer.MAX_VALUE;
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;DD)Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;", at = @At("HEAD"), argsOnly = true, name = "arg5")
+    private double modifyDoubleMax(double max) {
+        return Double.MAX_VALUE;
     }
 
-    @Inject(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;JJ)Lnet/minecraftforge/common/ForgeConfigSpec$LongValue;", at = @At("HEAD"))
-    private void onDefineInRange(List<String> path, Supplier<Long> defaultSupplier, long min, long max, CallbackInfoReturnable<ForgeConfigSpec.LongValue> cir) {
-        min = Long.MIN_VALUE;
-        max = Long.MAX_VALUE;
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;II)Lnet/minecraftforge/common/ForgeConfigSpec$IntValue;", at = @At("HEAD"), argsOnly = true, name = "arg3")
+    private int modifyIntMin(int min) {
+        return Integer.MIN_VALUE;
+    }
+
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;II)Lnet/minecraftforge/common/ForgeConfigSpec$IntValue;", at = @At("HEAD"), argsOnly = true, name = "arg4")
+    private int modifyIntMax(int max) {
+        return Integer.MAX_VALUE;
+    }
+
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;JJ)Lnet/minecraftforge/common/ForgeConfigSpec$LongValue;", at = @At("HEAD"), argsOnly = true, name = "arg3")
+    private long modifyLongMin(long min) {
+        return Long.MIN_VALUE;
+    }
+
+    @ModifyVariable(method = "defineInRange(Ljava/util/List;Ljava/util/function/Supplier;JJ)Lnet/minecraftforge/common/ForgeConfigSpec$LongValue;", at = @At("HEAD"), argsOnly = true, name = "arg5")
+    private long modifyLongMax(long max) {
+        return Long.MAX_VALUE;
     }
 }
